@@ -1,0 +1,27 @@
+
+name: Test Bybit Connection
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Test official Bybit endpoints
+        shell: bash
+        run: |
+          for host in api.bybit.com api.bytick.com; do
+            echo "Testing $host"
+            curl -sS -L --max-time 15 \
+              -o /tmp/bybit-response.txt \
+              -w "HTTP status: %{http_code}\n" \
+              "https://$host/v5/market/kline?category=linear&symbol=BTCUSDT&interval=15&limit=2"
+            head -c 300 /tmp/bybit-response.txt
+            echo
+          done
