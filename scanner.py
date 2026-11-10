@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 SYMBOLS = ['BTCUSDT', 'ETHUSDT', 'XAUTUSDT', 'SNDKUSDT', 'ZECUSDT', 'QNTUSDT']
 INTERVALS = {'15m': '15', '4h': '240'}
-BASE = 'https://api.bybit.com/v5/market/kline'
+BASE = 'https://api.bytick.com/v5/market/kline'
 
 
 def fetch(symbol, interval):
