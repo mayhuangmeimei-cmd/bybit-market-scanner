@@ -1,0 +1,39 @@
+
+name: Test OKX API
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test OKX markets
+        run: |
+          python3 - <<'PY'
+          import urllib.request
+          import json
+
+          symbols = [
+              "BTC-USDT-SWAP",
+              "ETH-USDT-SWAP",
+              "XAUT-USDT-SWAP",
+              "SNDK-USDT-SWAP",
+              "ZEC-USDT-SWAP",
+              "QNT-USDT-SWAP"
+          ]
+
+          for symbol in symbols:
+              url = (
+                  "https://www.okx.com/api/v5/market/candles"
+                  f"?instId={symbol}&bar=15m&limit=2"
+              )
+              try:
+                  with urllib.request.urlopen(url, timeout=10) as r:
+                      data = json.load(r)
+                      ok = data.get("code") == "0" and bool(data.get("data"))
+                      print(symbol, "OK" if ok else "UNAVAILABLE",
+                            data.get("msg", ""))
+              except Exception as e:
+                  print(symbol, "ERROR", str(e)[:120])
+          PY
